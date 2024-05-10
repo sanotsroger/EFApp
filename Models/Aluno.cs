@@ -5,6 +5,7 @@ namespace EFApp.Models
     public class Aluno 
     {
         [Key]
+        [ScaffoldColumn(false)]
         public int Id { get; set;}
 
         [Required(ErrorMessage = "The {0} field is required")]

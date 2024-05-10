@@ -1,10 +1,17 @@
 services:
   ef_sqlserver:
     container_name: ef-sqlserver
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: ef-sqlserver
+    build:
+      context: ./.docker/sqlserver
+      dockerfile: Dockerfile
     environment:
       ACCEPT_EULA: Y
       MSSQL_SA_PASSWORD: yourStrong(!)Password
-      MSSQL_PID: Evaluation
     ports:
       - 1433:1433
+    volumes:
+      - sqlserver_data_efapp:/var/opt/mssql/data
+
+volumes:
+  sqlserver_data_efapp:
