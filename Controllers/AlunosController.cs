@@ -23,12 +23,15 @@ namespace EFApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name, Email")] Aluno aluno)
         {
-            aluno.CreatedAt = DateTime.Now;
+            if (ModelState.IsValid)
+            {
+                aluno.CreatedAt = DateTime.Now;            
+                _context.Alunos.Add(aluno);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));  
+            }
             
-            _context.Alunos.Add(aluno);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            return View(aluno);
         }
 
         public async Task<IActionResult> Detail(int id)
@@ -47,9 +50,19 @@ namespace EFApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,CreatedAt")] Aluno aluno)
         {
-            _context.Update(aluno);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (id != aluno.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(aluno);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(aluno);
         }
     }
 }
